@@ -18,8 +18,7 @@ connection.connect(function (err) {
     console.log("connected as id " + connection.threadId + "\n");
     startApp();
 });
-// function to display products, price, quantity
-// AS = aliases 
+// function to display products, department, price, quantity
 function displayProducts() {
     connection.query("SELECT product_name AS 'Product', department_name AS 'Department', price AS 'Sales Price', stock_quantity AS 'In Stock' FROM products",
         (err, results, fields) => {
@@ -27,33 +26,16 @@ function displayProducts() {
                 throw err;
             }
             console.table(results);
-
-            // console.log(results);
-            // .map runs a function on ever item on the array and returns a new array
+// .map runs a function on every item on the array and returns a new array
             const productArray = results.map(itemInArray => itemInArray.Product);
-            // const productArray2 = results.map(product => {
-            //   return product.Product
-            // })
-
-            // equivalent code to .map() 
-            // const productChoiceArray = [];
-
-            // for(let i = 0; i < results.length; i++){
-            //   productChoiceArray.push(results[i].Product);
-            // }
-            // console.log("with .map(): ", productArray);
-            // console.log("without .map(): ", productChoiceArray);
-
             promptCustomer(productArray);
-
-
         })
 }
-
+// Function to start App, calling display products
 function startApp() {
     displayProducts();
 }
-
+// Function to prompt customer before and after selection
 function promptCustomer(availableItems) {
     inquirer.prompt([
         {
@@ -67,7 +49,7 @@ function promptCustomer(availableItems) {
             message: "How many would you like to buy?",
             name: "purchaseQuantity",
             validate: (value) => {
-                //   makes it so you cannot type a word in for quantity
+//  This makes it so you cannot type a word in for quantity
                 return !isNaN(value);
             }
         }
@@ -75,32 +57,18 @@ function promptCustomer(availableItems) {
         checkAvailability(customerSelection);
     });
 }
-
+// Function to make sure there is enough quanitity to fulfill purchase
 function checkAvailability(customerData) {
-    // object destructuring  
+// Object destructuring  
     let { customerSelection, purchaseQuantity } = customerData;
-
-    // equivalent code:
-    // let product = customerData.customerSelection;
-    // let quantity = customerData.purchaseQuantity;
-
-    // console.log("customerSelection: ", customerSelection);
-    // console.log("purchaseQuantity: ", purchaseQuantity);
-
-    // console.log("product: ", product);
-    // console.log("quantity: ", quantity);
-
     connection.query("SELECT stock_quantity, product_name, price FROM products WHERE product_name=?", [customerSelection], (err, results, fields) => {
         if (err) {
             throw err;
         }
-
-
         let stock_quantity = results[0].stock_quantity;
         let productPrice = results[0].price;
         let remainingItems = stock_quantity - purchaseQuantity;
         let salesPrice = productPrice * purchaseQuantity;
-
 
         if (remainingItems > -1) {
             if (purchaseQuantity > 1) {
@@ -108,17 +76,13 @@ function checkAvailability(customerData) {
             } else {
                 console.log(`You just purchased ${purchaseQuantity} ${customerSelection} for $${salesPrice}`);
             }
-
             return updateDatabase(customerSelection, remainingItems, salesPrice);
         }
-
         console.log("Sorry, we have insufficient quantity");
         return continueShoppingPrompt();
-
     });
-
 }
-
+// Function to update Database
 function updateDatabase(itemName, itemInventory, totalSales) {
 
     connection.query("UPDATE products SET ? WHERE ?", [
@@ -132,12 +96,10 @@ function updateDatabase(itemName, itemInventory, totalSales) {
         if (err) {
             throw err;
         }
-
         return continueShoppingPrompt();
     });
-
 }
-
+// Prompt to ask us if we would like to continue shopping
 async function continueShoppingPrompt() {
     const continuePrompt = await inquirer.prompt(
         [
@@ -145,15 +107,14 @@ async function continueShoppingPrompt() {
                 type: "confirm",
                 message: "Would you like to continue shopping?",
                 name: "continue"
-
             }
         ]
     );
-    // continuePrompt would be the variable inside .then()
+// continuePrompt will be the variable inside .then()
     if (continuePrompt.continue) {
         return displayProducts();
     }
-
+// Ending goodbyes
     console.log('Thank you for shopping, please come back soon!');
     connection.end();
 }
