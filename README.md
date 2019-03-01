@@ -20,22 +20,25 @@ To utilize this project, access my files via my Node_MySQL Github repository and
 
 ### How to use
 
-Explain how to run the automated tests for this system
+After following step one through seven above, your terminal will first populate with a start menu. The table shows you which products are for sale, and the departments, prices, and quantities of those products. A prompt asks you which product you'd like to buy, and you may scroll through until you've made your choice.  
 
-![](XXX.png)
+![](bAmazonStart.png)
 
-## Github repository
+![](bAmazonSelect.png)
+
+### Github repository
 
 (https://github.com/HannahSchuelke/Node_MySQL)
 
-## Built With
+### Built With
 
-* [Node Spotify API](https://www.npmjs.com/package/node-spotify-api) - Spotify npm installed
-* [Node Axios](https://www.npmjs.com/package/axios) - Axios package installed
-* [OMDB API](http://www.omdbapi.com/) - Used to generate `movie-this` responses
-* [Bands In Town API](http://www.artists.bandsintown.com/bandsintown-api) - Used to generate `concert-this` responses
+
+* [npm install](https://docs.npmjs.com/cli/install) - Installs package.json and node.modules that app depends on
+* [mysql](https://www.npmjs.com/package/mysql) - Needed to access MySQL Workbench
+* [inquirer](https://www.npmjs.com/package/inquirer) - Needed for prompts on command interface
+* [console.table](https://www.npmjs.com/package/console.table) - Used to generate table's esthetics
 * [dotenv](https://www.npmjs.com/package/dotenv) - Installed to load environment variables from my .env file into process.env
 
-## Authors
+### Authors
 
 * **Hannah Schuelke** - (https://github.com/HannahSchuelke)
